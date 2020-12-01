@@ -43,11 +43,16 @@ export class TodoService {
   }
 
   public SetUpdatingTodoItemId(id: number): void {
-    const foundTodoItem = this.todoStore.FindById(id);
-
-    if (foundTodoItem !== undefined) {
-      this.updatingToDoItem = Object.assign({}, foundTodoItem);
-    }
+    this.findFailMessage = '';
+    this.todoHttpService.FindById(id).subscribe(todoItem => {
+      const foundTodoItem = todoItem;
+      if (foundTodoItem !== undefined) {
+        this.updatingToDoItem = Object.assign({}, foundTodoItem);
+      }
+    },
+    error => {
+      this.findFailMessage = 'find fail because web API error';
+    });
   }
 
   public Create(todoItem: ToDoItem) {
@@ -81,7 +86,7 @@ export class TodoService {
   public GetItemById(id: number) {
     this.findFailMessage = '';
     this.todoHttpService.FindById(id).subscribe(todoItem => {
-      console.log(todoItem);
+      this.selectedTodoItem = todoItem;
     },
     error => {
       this.findFailMessage = 'find fail because web API error';
@@ -90,6 +95,12 @@ export class TodoService {
 
 
   public SetSelectedTodoItemId(id: number): void{
-    this.selectedTodoItem = this.todoStore.FindById(id);
+    this.findFailMessage = '';
+    this.todoHttpService.FindById(id).subscribe(todoItem => {
+      this.selectedTodoItem = todoItem;
+    },
+    error => {
+      this.findFailMessage = 'find fail because web API error';
+    });
   }
 }
