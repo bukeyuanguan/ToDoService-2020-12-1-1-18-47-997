@@ -42,4 +42,10 @@ describe('Router', () => {
     tick(50);
     expect(location.path()).toBe('/edit/1');
   }));
+
+  it('navigate to "create" when redirect to "create" ', fakeAsync(() => {
+    router.navigate(['create']);
+    tick(50);
+    expect(location.path()).toBe('/create');
+  }));
 });
