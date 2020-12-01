@@ -13,6 +13,8 @@ export class TodoService {
   private currentId: number = 0;
   public getAllFailMessage: string;
   public createFailMessage: string;
+  public updateFailMessage: string;
+  public deleteFailMessage: string;
   private _todoItems: Array<ToDoItem>;
 
   constructor(private todoStore: TodoStoreService, private todoHttpService: TodoHttpService) {
@@ -21,10 +23,13 @@ export class TodoService {
     this.selectedTodoItem = new ToDoItem(-1, "", "", false);
     this.getAllFailMessage = '';
     this.createFailMessage = '';
+    this.updateFailMessage = '';
+    this.deleteFailMessage = '';
     //this.currentId = this.todoItems.length;
   }
 
   public get todoItems(): Array<ToDoItem> {
+    this.getAllFailMessage = '';
     const allToDoItem = new Array<ToDoItem>();
     this.todoHttpService.GetAll().subscribe(todoItems => {
       allToDoItem.push(...todoItems);
@@ -44,24 +49,30 @@ export class TodoService {
   }
 
   public Create(todoItem: ToDoItem) {
-    // todoItem.id = this.currentId;
-    // var newTodoItem = Object.assign({}, todoItem);
-    // this.todoStore.Create(newTodoItem);
-    // this.currentId++;
+    this.createFailMessage = '';
     this.todoHttpService.Create(todoItem).subscribe(todoItem => {
       console.log(todoItem);
     },
-    error =>{
+    error => {
       this.createFailMessage = 'create fail because web API error';
     });
   }
-
-  public UpdateTodoItem(updateTodoItems: ToDoItem): void {
-    this.todoStore.Update(updateTodoItems);
+  public UpdateTodoItem(updateTodoItems: ToDoItem) {
+    this.todoHttpService.Update(updateTodoItems).subscribe(todoItem => {
+      console.log(todoItem);
+    },
+    error => {
+      this.updateFailMessage = 'update fail because web API error';
+    });
   }
 
-  public DeleteTodoItem(id: number):void{
-    this.todoStore.Delete(id);
+  public DeleteTodoItem(id: number): void{
+    this.todoHttpService.Delete(id).subscribe(todoItem => {
+      console.log(todoItem);
+    },
+    error => {
+      this.deleteFailMessage = 'delete fail because web API error';
+    });
   }
 
   public SetSelectedTodoItemId(id: number):void{
