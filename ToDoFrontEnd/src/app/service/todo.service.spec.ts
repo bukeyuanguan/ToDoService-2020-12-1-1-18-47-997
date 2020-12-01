@@ -135,4 +135,20 @@ describe('TodoService', () => {
     service.GetItemById(id);
     expect(httpClientSpy.get.calls.count()).toBe(1, 'one call');
   });
+
+  it('should process error response when get item by id via get', fakeAsync(() => {
+    // given
+    const findTodoItem = new ToDoItem(0, 'new todo', 'new todo description', false);
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 404 error',
+      status: 404, statusText: 'Not Found'
+    });
+    httpClientSpy.get.and.returnValue(asyncError(errorResponse));
+    // when
+    // tslint:disable-next-line: no-unused-expression
+    service.GetItemById(findTodoItem.id);
+    tick(50);
+    // then
+    expect(service.findFailMessage).toBe('find fail because web API error');
+  }));
 });
