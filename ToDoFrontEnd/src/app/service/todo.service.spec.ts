@@ -90,17 +90,49 @@ describe('TodoService', () => {
     expect(httpClientSpy.put.calls.count()).toBe(1, 'one call');
   });
 
-  it('should delete todo item', () => {
-    const id = service.todoItems[0].id;
-    httpClientSpy.delete.and.returnValue(of(service.todoItems[0]));
-    service.DeleteTodoItem(id);
-    expect(service.todoItems.length).toBe(4);
-  });
+  it('should process error response when update via put', fakeAsync(() => {
+    // given
+    const updateTodoItem = new ToDoItem(0, 'new todo', 'new todo description', false);
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 404 error',
+      status: 404, statusText: 'Not Found'
+    });
+    httpClientSpy.put.and.returnValue(asyncError(errorResponse));
+    // when
+    // tslint:disable-next-line: no-unused-expression
+    service.UpdateTodoItem(updateTodoItem);
+    tick(50);
+    // then
+    expect(service.updateFailMessage).toBe('update fail because web API error');
+  }));
 
+  it('should delete todo item', () => {
+    const id = 0;
+    const deleteTodoItem = new ToDoItem(0, 'new todo', 'new todo description', false);
+    httpClientSpy.delete.and.returnValue(of(deleteTodoItem));
+    service.DeleteTodoItem(id);
+    expect(httpClientSpy.delete.calls.count()).toBe(1, 'one call');
+  });
+  it('should process error response when delete via delete', fakeAsync(() => {
+    // given
+    const deleteTodoItem = new ToDoItem(0, 'new todo', 'new todo description', false);
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 404 error',
+      status: 404, statusText: 'Not Found'
+    });
+    httpClientSpy.delete.and.returnValue(asyncError(errorResponse));
+    // when
+    // tslint:disable-next-line: no-unused-expression
+    service.DeleteTodoItem(deleteTodoItem.id);
+    tick(50);
+    // then
+    expect(service.deleteFailMessage).toBe('delete fail because web API error');
+  }));
   it('should get special todo item', () => {
-    const id = service.todoItems[0].id;
-    httpClientSpy.get.and.returnValue(of(service.todoItems[0]));
-    service.SetSelectedTodoItemId(id);
-    expect(service.selectedTodoItem.id).toBe(id);
+    const id = 0;
+    const findTodoItem = new ToDoItem(0, 'new todo', 'new todo description', false);
+    httpClientSpy.get.and.returnValue(of(findTodoItem));
+    service.GetItemById(id);
+    expect(httpClientSpy.get.calls.count()).toBe(1, 'one call');
   });
 });

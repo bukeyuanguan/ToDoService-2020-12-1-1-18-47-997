@@ -15,6 +15,7 @@ export class TodoService {
   public createFailMessage: string;
   public updateFailMessage: string;
   public deleteFailMessage: string;
+  public findFailMessage: string;
   private _todoItems: Array<ToDoItem>;
 
   constructor(private todoStore: TodoStoreService, private todoHttpService: TodoHttpService) {
@@ -25,6 +26,7 @@ export class TodoService {
     this.createFailMessage = '';
     this.updateFailMessage = '';
     this.deleteFailMessage = '';
+    this.findFailMessage = '';
     //this.currentId = this.todoItems.length;
   }
 
@@ -58,6 +60,7 @@ export class TodoService {
     });
   }
   public UpdateTodoItem(updateTodoItems: ToDoItem) {
+    this.updateFailMessage = '';
     this.todoHttpService.Update(updateTodoItems).subscribe(todoItem => {
       console.log(todoItem);
     },
@@ -67,6 +70,7 @@ export class TodoService {
   }
 
   public DeleteTodoItem(id: number): void{
+    this.deleteFailMessage = '';
     this.todoHttpService.Delete(id).subscribe(todoItem => {
       console.log(todoItem);
     },
@@ -74,8 +78,18 @@ export class TodoService {
       this.deleteFailMessage = 'delete fail because web API error';
     });
   }
+  public GetItemById(id: number) {
+    this.findFailMessage = '';
+    this.todoHttpService.FindById(id).subscribe(todoItem => {
+      console.log(todoItem);
+    },
+    error => {
+      this.findFailMessage = 'find fail because web API error';
+    });
+  }
 
-  public SetSelectedTodoItemId(id: number):void{
+
+  public SetSelectedTodoItemId(id: number): void{
     this.selectedTodoItem = this.todoStore.FindById(id);
   }
 }
