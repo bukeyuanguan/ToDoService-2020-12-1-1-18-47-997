@@ -30,10 +30,16 @@ describe('Router', () => {
     router.initialNavigation();
   });
 
-  it('test navigate', fakeAsync(() => {
+  it('navigate to "" when redirect to "" ', fakeAsync(() => {
     router.navigate(['']);
     tick(50);
     expect(location.path()).toBe('/');
 
-  }))
+  }));
+
+  it('navigate to "edit/1" when redirect to "edit/1" ', fakeAsync(() => {
+    router.navigate(['edit/1']);
+    tick(50);
+    expect(location.path()).toBe('/edit/1');
+  }));
 });
