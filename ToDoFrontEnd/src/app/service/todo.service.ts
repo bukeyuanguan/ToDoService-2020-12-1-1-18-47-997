@@ -93,7 +93,6 @@ export class TodoService {
     });
   }
 
-
   public SetSelectedTodoItemId(id: number): void{
     this.findFailMessage = '';
     this.todoHttpService.FindById(id).subscribe(todoItem => {

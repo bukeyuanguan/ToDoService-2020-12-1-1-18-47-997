@@ -1,9 +1,9 @@
 <h1>
     This is list-todoitem component!
 </h1>
-<table>
-    <tr>
-        <td>
+<table mat-table>
+    <tr mat-header-cell *matHeaderCellDef>
+        <td mat-cell>
             Id
         </td>
         <td>
@@ -33,12 +33,37 @@
             {{todoItem.isDone}}
         </td>
         <td>
-            <button (click)="updateTodoItem(todoItem.id)">Update</button>
-            <button (click)="deleteTodoItem(todoItem.id)">Delete</button>
-            <button (click)="selectTodoItem(todoItem.id)">Detail</button>
+            <button mat-raised-button color="update" (click)="updateTodoItem(todoItem.id)">Update</button>
+            <button mat-raised-button color="warn" (click)="deleteTodoItem(todoItem.id)">Delete</button>
+            <button mat-raised-button color="primary" (click)="selectTodoItem(todoItem.id)">Detail</button>
         </td>
     </tr>
 </table>
+<table mat-table>
+    <!-- Position Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> Id </th>
+      <td mat-cell *matCellDef="let todoItem"> {{todoItem.id}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> title </th>
+      <td mat-cell *matCellDef="let todoItem"> {{todoItem.title}} </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let todoItem"> {{todoItem.description}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="isDone">
+      <th mat-header-cell *matHeaderCellDef> IsDone </th>
+      <td mat-cell *matCellDef="let todoItem"> {{todoItem.isDone}} </td>
+    </ng-container>
+  </table>
 <h1>{{todoService.getAllFailMessage}}</h1>
 <h1>{{todoService.deleteFailMessage}}</h1>
 
